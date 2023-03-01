@@ -55,11 +55,8 @@ class Equipe:
             joueur.afficherStatistiques()
 
     # Method to update the statistics of a player #
-    def mettreAJourStatistiquesJoueur(self, joueur, buts, passes, jaunes, rouges):
-        joueur.buts += buts
-        joueur.passes += passes
-        joueur.jaunes += jaunes
-        joueur.rouges += rouges
+    def mettreAJourStatistiquesJoueur(self, joueur):
+        joueur.afficherStatistiques()
 
 
 # Test #
@@ -88,7 +85,5 @@ equipe1.afficherStatistiquesJoueurs()
 joueur1.marquerUnBut()
 joueur1.effectuerUnePasseDecisive()
 joueur1.recevoirUnCartonJaune()
-
-equipe1.mettreAJourStatistiquesJoueur(joueur1, 1, 1, 1, 0)
 
 joueur1.afficherStatistiques()
