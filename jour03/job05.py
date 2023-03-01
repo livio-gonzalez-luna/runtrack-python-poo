@@ -1,63 +1,104 @@
-# Commencer par créer une classe nommée Personnage prenant des paramètres de
-# construction : nom (string) et vie(int).
-
-# Créez au minimum une méthode “attaquer” qui enlève des points à son adversaire.
-
-# Ensuite créer la classe “Jeu” ne prenant pas de paramètre.
-
-# Créer une méthode “choisirNiveau” qui permet de demander au joueur le niveau de difficulté. Celui-ci sera
-# stocké dans l’attribut niveau.
-# En fonction du niveau choisi, le nombre de points de vie du joueur ainsi que de l'ennemi
-# seront différents.
-
-# Créer “lancerJeu”, méthode qui utilise l’attribut niveau. Cette méthode aura pour but
-# d’instancier deux objets “Personnage”, un qui représente le joueur et l’autre l'ennemi
-# avec un nombre de points défini en fonction du niveau.
-
-# Implémenter le déroulement d’une partie en demandant au joueur le niveau de difficulté
-# et pensez à ajouter une méthode qui vérifie la santé de vos personnages ainsi qu’une
-# méthode permettant de vérifier qui a gagné.
-
+import random
+import time
 
 class Personnage:
-    def __init__(self, nom : str, vie : int):
+    # Constructeur #
+    def __init__(self, nom, vie):
         self.nom = nom
         self.vie = vie
 
-    def attaquer(self, ennemi):
-        ennemi.vie -= 1
+    # Méthodes #
+    # Attaque #
+    def attaquer(self, adversaire):
+        print(self.nom, "attaque comme il peut", adversaire.nom)
+        adversaire.vie -= 1
 
+    # Soin #
+    def soin(self):
+        print(self.nom, "boit une potion de soin")
+        self.vie += 2
+
+    # Bouclier #
+    def bouclier(self):
+        print(self.nom, "utilise un bouclier")
+        self.vie += 1
+
+    # Chute #
+    def chute(self):
+        print(self.nom, "tombe dans un trou")
+        self.vie -= 1
+
+    # Double attaque #
+    def doubleAttaque(self, adversaire):
+        print(self.nom, "utilise une double attaque sur", adversaire.nom)
+        adversaire.vie -= 2
+
+    # Attaque spéciale #
+    def attaqueSpeciale(self, adversaire):
+        print(self.nom, "utilise une attaque spéciale sur", adversaire.nom)
+        if self.nom == "Joueur":
+            adversaire.vie -= 3
+        else:
+            self.vie -= 3
+
+    # Afficher vie #
+    def afficherVie(self):
+        print(self.nom, "a", self.vie, "points de vie")
+
+    # Jouer tour #
+    def jouerTour(self, adversaire):
+        choix = random.randint(1, 6)
+        if choix == 1:
+            self.attaquer(adversaire)
+        elif choix == 2:
+            self.soin()
+        elif choix == 3:
+            self.doubleAttaque(adversaire)
+        elif choix == 4:
+            self.attaqueSpeciale(adversaire)
+        elif choix == 5:
+            self.bouclier()
+        elif choix == 6:
+            self.chute()
+
+# Jeu #
 class Jeu:
+    # Constructeur #
     def __init__(self):
         self.niveau = 0
 
+    # Méthodes #
+    # Choisir niveau #
     def choisirNiveau(self):
-        self.niveau = int(input("Choisissez un niveau de difficulté (1, 2 ou 3) : "))
+        self.niveau = int(input("Choisissez un niveau de difficulté : "))
+        if self.niveau == 1:
+            self.niveau = 10
+        
+        elif self.niveau == 2:
+            self.niveau = 20
+        
+        elif self.niveau == 3:
+            self.niveau = 30
 
+    # Lancer jeu #
     def lancerJeu(self):
         self.choisirNiveau()
-        if self.niveau == 1:
-            joueur = Personnage("Joueur", 10)
-            ennemi = Personnage("Ennemi", 10)
-        elif self.niveau == 2:
-            joueur = Personnage("Joueur", 20)
-            ennemi = Personnage("Ennemi", 20)
-        elif self.niveau == 3:
-            joueur = Personnage("Joueur", 30)
-            ennemi = Personnage("Ennemi", 30)
+        turn = random.randint(1, 2)
+        joueur1 = Personnage("Joueur 1", self.niveau)
+        joueur2 = Personnage("Joueur 2", self.niveau)
+        while joueur1.vie > 0 and joueur2.vie > 0:
+            if turn == 1:
+                joueur1.jouerTour(joueur2)
+            else:
+                joueur2.jouerTour(joueur1)
+            joueur1.afficherVie()
+            joueur2.afficherVie()
+            print()
+            time.sleep(0.5)
+        if joueur1.vie > joueur2.vie:
+            print("Joueur1 a gagné !")
         else:
-            print("Niveau invalide")
-            return
+            print("Joueur2 a gagné !")
 
-        while joueur.vie > 0 and ennemi.vie > 0:
-            joueur.attaquer(ennemi)
-            ennemi.attaquer(joueur)
-
-        if joueur.vie > 0:
-            print("Le joueur a gagné")
-        else:
-            print("L'ennemi a gagné")
-
-        def verifierSante(self):
-            if self.vie <= 0:
-                print("Le personnage est mort")
+jeu = Jeu()
+jeu.lancerJeu()
