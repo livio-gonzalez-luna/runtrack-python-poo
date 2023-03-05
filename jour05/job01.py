@@ -7,8 +7,10 @@
 
 
 def factorial(n):
+    # Recursive function to calculate the factorial of a number #
     if n == 1:
         return 1
+    # The factorial of a number is the product of the number and the factorial of the number minus 1 #  
     else:
         return n * factorial(n-1)
 
